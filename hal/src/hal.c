@@ -1,7 +1,7 @@
 /*
- * OpenCommsRadio HAL Interface
+ * OpenCommRadio HAL Interface
  *
- * This file is part of the OpenCommsRadio project.
+ * This file is part of the OpenCommRadio project.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
  *

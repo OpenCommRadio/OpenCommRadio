@@ -1,4 +1,4 @@
-# OpenCommsRadio
+# OpenCommRadio
 
 **OpenCommRadio** is a modular, cross-platform radio firmware framework designed for digital communications, message routing, and simple UI interaction. It supports multiple handheld radios and simulation targets via a clean hardware abstraction layer (HAL).
 
@@ -24,7 +24,7 @@
 │   ├── include/       # hal.h
 │   ├── src/           # hal.c (weak stubs, polling)
 │   └── rules.mk
-├── core/              # OpenCommsRadio FSM, protocol, UI
+├── core/              # OpenCommRadio FSM, protocol, UI
 │   ├── include/
 │   ├── src/
 │   └── rules.mk
