@@ -1,3 +1,6 @@
 [submodule "platforms/uv-k5/fw"]
 	path = platforms/uv-k5/fw
 	url = https://github.com/OpenCommRadio/UV-K5-FW
+[submodule "platforms/uv-k5/k5prog"]
+	path = platforms/uv-k5/k5prog
+	url = https://github.com/OpenCommRadio/k5prog

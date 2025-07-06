@@ -46,6 +46,7 @@
 To build the core and platform HAL into static libraries:
 
 ```bash
+git submodule update --init --recursive
 make PLATFORM=uv-k5
 ```
 
