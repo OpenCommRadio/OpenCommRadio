@@ -3,8 +3,11 @@ BUILD_DIR := build
 OBJ_DIR   := $(BUILD_DIR)/obj
 INCLUDES  :=
 
-PLATFORM ?= uv-k5
+PLATFORM ?= linux
 
+SRCS :=
+OBJS :=
+TARGETS :=
 include platforms/$(PLATFORM)/rules.mk
 
 include hal/rules.mk
@@ -12,8 +15,6 @@ include core/rules.mk
 
 CPPFLAGS += $(INCLUDES)
 
-SRCS :=
-OBJS :=
 
 # Top-level build target: build everything
 all: $(TARGETS)
