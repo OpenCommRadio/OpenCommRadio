@@ -1,4 +1,5 @@
 .DEFAULT_GOAL := all
+
 BUILD_DIR     := build
 OBJ_DIR       := $(BUILD_DIR)/obj
 LIB_TARGETS   :=
@@ -15,6 +16,8 @@ include platforms/$(PLATFORM)/rules.mk
 include hal/rules.mk
 include core/rules.mk
 
+CPPFLAGS += $(INCLUDES)
+
 all: $(LIB_TARGETS) $(EXEC_TARGETS)
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(dir $@)
@@ -22,10 +25,9 @@ $(OBJ_DIR)/%.o: %.c
 
 CPPFLAGS += $(INCLUDES)
 
-# Only link the executable if it was requested
 $(BUILD_DIR)/opencommradio: $(OBJS) $(LIB_TARGETS)
 	@mkdir -p $(dir $@)
-	$(CC) $(OBJS) $(LIB_TARGETS) -o $@
+	$(CC) $(LIB_TARGETS) $(OBJS)  -o $@
 
 $(OBJ_DIR)/%.o: %.c
 	mkdir -p $(dir $@)

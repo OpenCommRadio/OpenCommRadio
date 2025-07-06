@@ -92,29 +92,29 @@ void hal_init() {
 }
 
 
-void hal_main_loop(void) {
-     for (;;) {
-         uint8_t ch = hal_get_channel();
-         if (ch != last_channel) {
-             last_channel = ch;
-             opencomm_on_channel_change(ch);
-         }
 
-         // PTT
-         bool ptt = hal_ptt_is_down();
-         if (ptt != last_ptt) {
-             last_ptt = ptt;
-             opencomm_on_ptt_change(ptt);
-         }
-
-         // Exit button
-         bool exit = hal_exit_button_pressed();
-         if (exit && !last_exit) {
-             opencomm_on_exit_button();
-         }
-         last_exit = exit;
-
-         hal_background_tick();
-         opencomm_main_fsm();
+void hal_main_loop_iter() {
+     uint8_t ch = hal_get_channel();
+     if (ch != last_channel) {
+         last_channel = ch;
+         opencomm_on_channel_change(ch);
      }
+
+     // PTT
+     bool ptt = hal_ptt_is_down();
+     if (ptt != last_ptt) {
+         last_ptt = ptt;
+         opencomm_on_ptt_change(ptt);
+     }
+
+     // Exit button
+     bool exit = hal_exit_button_pressed();
+     if (exit && !last_exit) {
+         opencomm_on_exit_button();
+     }
+     last_exit = exit;
+
+     hal_background_tick();
+     opencomm_main_fsm();
+     
 }

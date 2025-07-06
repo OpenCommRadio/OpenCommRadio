@@ -59,6 +59,12 @@ This produces:
 The per-platform makefile rules will then link these into a final firmware image
 
 ---
+## Testing with the emulator
+
+Currently a simple emulator is provided in the linux/ platform, it builds a CLI-based emulator that will allow
+virtual inputs as commands and optionally supports GNU radio for connecting up HackRF
+
+---
 
 ##  Adding New Platforms
 
@@ -73,7 +79,8 @@ The per-platform makefile rules will then link these into a final firmware image
 2. Implement the required HAL functions in `src/hal_platform_<your_platform>.c`
 3. Add `rules.mk` - you can use the UV-K5 and linux platforms as examples
 
-Pull requests to add platforms MUST use submodules to be accepted
+Pull requests to add platforms MUST use submodules to be accepted. The only exception is "native" platforms, such as
+the current linux platform - if anyone wants to contribute support for Windows or MacOS please do so.
 
 ---
 

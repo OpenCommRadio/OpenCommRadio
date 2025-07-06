@@ -19,9 +19,21 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>:w
+#include <stdlib.h>
+#include <stdbool.h>
 
+#include "hal.h"
+
+bool running = true;
+
+void linux_main_loop() {
+     while(running) {
+        hal_main_loop_iter();
+     }
+}
 
 int main(int argc, char** argv) {
+    fprintf(stderr,"OpenComm core v%s\n", OPENCOMM_CORE_VER);
+    linux_main_loop();
     return 0;
 }
