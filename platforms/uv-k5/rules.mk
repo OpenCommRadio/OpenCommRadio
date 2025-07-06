@@ -1,10 +1,14 @@
+#CC := arm-none-eabi-gcc
+
 EXEC_TARGETS  += $(BUILD_DIR)/k5prog
 CLEAN_TARGETS += k5prog-clean
 
-$(BUILD_DIR)/k5prog: platforms/uv-k5/k5prog/k5prog
+K5PROG_DIR := platforms/uv-k5/k5prog
+
+$(BUILD_DIR)/k5prog: $(K5PROG_DIR)/k5prog
 	mkdir -p $(dir $@)
-	make -C platforms/uv-k5/k5prog
+	$(call make_native,$(K5PROG_DIR),k5prog)
 	cp $< $@
 
 k5prog-clean:
-	make -C platforms/uv-k5/k5prog clean
+	$(call make_native,$(K5PROG_DIR),clean)

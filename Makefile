@@ -6,6 +6,11 @@ EXEC_TARGETS  :=
 TOOLS_TARGETS :=
 PLATFORM ?= linux
 
+define make_native
+	unset CC CFLAGS CPPFLAGS LD LDFLAGS AR OBJCOPY; \
+	$(MAKE) -C $(1) $(2)
+endef
+
 include platforms/$(PLATFORM)/rules.mk
 include hal/rules.mk
 include core/rules.mk
