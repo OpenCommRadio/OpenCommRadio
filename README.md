@@ -62,7 +62,7 @@ The per-platform makefile rules will then link these into a final firmware image
 
 ##  Adding New Platforms
 
-1. Create a new folder under `platforms/`:
+1. Create a new git repository and add it as a submodule under platforms/ with the following structure:
 
    ```
    platforms/<your_platform>/
@@ -70,8 +70,10 @@ The per-platform makefile rules will then link these into a final firmware image
    ├── src/
    └── rules.mk
    ```
-2. Implement the required HAL functions in `hal_platform_<your_platform>.c`
-3. Add `rules.mk` - you can use the UV-K5 as an example
+2. Implement the required HAL functions in `src/hal_platform_<your_platform>.c`
+3. Add `rules.mk` - you can use the UV-K5 and linux platforms as examples
+
+Pull requests to add platforms MUST use submodules to be accepted
 
 ---
 
