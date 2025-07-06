@@ -1,0 +1,3 @@
+Build a simple "linux" platform that implements an emulator with a simple CLI
+Build support for the UV-K5
+Build SDL emulator platform
