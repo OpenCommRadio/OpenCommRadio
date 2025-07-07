@@ -27,7 +27,7 @@ CPPFLAGS += $(INCLUDES)
 
 $(BUILD_DIR)/opencommradio: $(OBJS) $(LIB_TARGETS)
 	@mkdir -p $(dir $@)
-	$(CC) $(LIB_TARGETS) $(OBJS)  -o $@
+	$(CC) -lpthread $(LIB_TARGETS) $(OBJS)  -o $@
 
 $(OBJ_DIR)/%.o: %.c
 	mkdir -p $(dir $@)

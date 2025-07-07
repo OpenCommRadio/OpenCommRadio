@@ -21,14 +21,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <pthread.h>
 
 #include "hal.h"
 
 bool running = true;
 
-void linux_main_loop() {
+pthread_t opencomm_thread;
+
+void* opencomm_main_loop(void* arg) {
+     hal_init();
      while(running) {
         hal_main_loop_iter();
+	hal_delay_us(1);
      }
 }
 
@@ -36,6 +41,9 @@ int main(int argc, char** argv) {
     fprintf(stderr,"OpenComm core v%s\n", OPENCOMM_CORE_VER);
     fprintf(stderr,"OpenComm HAL v%s\n",  OPENCOMM_HAL_VER);
     fprintf(stderr,"OpenComm linux platform v%s\n", OPENCOMM_PLATFORM_LINUX_VER);
-    linux_main_loop();
+
+    int ret = pthread_create(&opencomm_thread,NULL,&opencomm_main_loop,NULL);
+
+    pthread_join(opencomm_thread, NULL);
     return 0;
 }
