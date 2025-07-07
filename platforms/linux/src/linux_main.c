@@ -35,7 +35,7 @@ void linux_main_loop() {
 int main(int argc, char** argv) {
     fprintf(stderr,"OpenComm core v%s\n", OPENCOMM_CORE_VER);
     fprintf(stderr,"OpenComm HAL v%s\n",  OPENCOMM_HAL_VER);
-    fprintf(stderr,"OpenComm linux platform v%\n", OPENCOMM_PLATFORM_LINUX_VER);
+    fprintf(stderr,"OpenComm linux platform v%s\n", OPENCOMM_PLATFORM_LINUX_VER);
     linux_main_loop();
     return 0;
 }
