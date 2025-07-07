@@ -43,6 +43,10 @@ void hal_delay_us(uint16_t us) {
      nanosleep(&ts, NULL); 
 }
 
+void hal_load_default_codeplug() {
+     fprintf(stderr,"hal_load_default_codeplug(): loading PMR channels as the default\n");
+}
+
 bool hal_ptt_is_down() { return false; }
 
 bool hal_exit_button_pressed() { return false; }
