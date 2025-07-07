@@ -25,8 +25,13 @@
 
 oc_fsm_state_t oc_current_state = OC_STATE_BOOT;
 
+uint32_t oc_last_freq = 0;
+uint16_t oc_last_chan = 0;
+
+
 uint32_t oc_cur_freq      = 0;
 uint32_t oc_cur_chan_freq = 0;
 uint16_t oc_cur_chan_no   = 0;
 char*    oc_cur_chan_name = NULL;
+
 

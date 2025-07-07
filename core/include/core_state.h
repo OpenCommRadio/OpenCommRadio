@@ -34,6 +34,9 @@ typedef enum {
 
 extern oc_fsm_state_t oc_current_state;
 
+extern uint32_t oc_last_freq;
+extern uint16_t oc_last_chan;
+
 extern uint32_t oc_cur_freq;
 extern uint32_t oc_cur_chan_freq;
 extern uint16_t oc_cur_chan_no;

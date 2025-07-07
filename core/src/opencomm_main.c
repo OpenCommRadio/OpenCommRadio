@@ -44,9 +44,19 @@ static char freq_str[16];
 #include <stdio.h>
 #include <stdint.h>
 
-void format_frequency(char *out, size_t out_size, uint32_t hz) {
+static void format_frequency(char *out, size_t out_size, uint32_t hz) {
      snprintf(out, out_size, "%u.%06u MHz", hz / 1000000, hz % 1000000);
 
+}
+
+static void render_state_analogue_idle() {
+	hal_display_clear();
+	hal_display_status_text("OPENCOMM A");
+	hal_display_line(1,"VOICE MODE");
+	hal_display_line(2,hal_get_channel_name(hal_get_channel()));
+	format_frequency(freq_str, sizeof(freq_str), hal_get_frequency());
+	hal_display_line(3,freq_str);
+	hal_display_update();
 }
 
 void opencomm_main_fsm() {
@@ -69,6 +79,10 @@ void opencomm_main_fsm() {
 		oc_cur_chan_name = hal_get_channel_name(oc_cur_chan_no);
 		oc_cur_chan_freq = hal_get_channel_freq(oc_cur_chan_no);
 
+		// set the last channel correctly
+		oc_last_freq = oc_cur_freq;
+		oc_last_chan = oc_cur_chan_no;
+
 		// and now we setup the correct frequency for that channel
 		hal_set_frequency(oc_cur_chan_freq);
 
@@ -79,16 +93,13 @@ void opencomm_main_fsm() {
 		} else {
 			oc_current_state = OC_STATE_ANALOGUE_IDLE;
 		}
+
+		// render it here, because otherwise it won't be rendered
+		render_state_analogue_idle();
 	break;
 
 	case OC_STATE_ANALOGUE_IDLE:
-		hal_display_clear();
-		hal_display_status_text("OPENCOMM A");
-		hal_display_line(1,"VOICE MODE");
-		hal_display_line(2,hal_get_channel_name(hal_get_channel()));
-		format_frequency(freq_str, sizeof(freq_str), hal_get_frequency());
-		hal_display_line(3,freq_str);
-		hal_display_update();
+		if((oc_last_freq != oc_cur_freq)||(oc_last_chan != oc_cur_chan_no)) render_state_analogue_idle();
 	break;
 
 	case OC_STATE_ANALOGUE_TX:
