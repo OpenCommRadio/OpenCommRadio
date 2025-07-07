@@ -27,13 +27,37 @@ static uint8_t last_channel = 0xFF;
 static bool    last_ptt     = false;
 static bool    last_exit    = false;
 
+static const char     default_channel_name[] = "PMR1";
+static const uint32_t default_channel_freq   = 446006250;
+
 // --- Weak platform overrides ---
 
 __attribute__((weak))
 void hal_platform_init() {}
 
 __attribute__((weak))
+void hal_delay_ms(uint16_t ms) { }
+
+__attribute__((weak))
+void hal_delay_us(uint16_t us) { }
+
+__attribute__((weak))
 uint8_t hal_get_channel() { return 0; }
+
+__attribute__((weak))
+uint16_t hal_get_channel_count() { return 1; }
+
+__attribute__((weak))
+void hal_set_channel(uint16_t chan) { }
+
+__attribute__((weak))
+char* hal_get_channel_name(uint16_t chan) { return (char*)default_channel_name; }
+
+__attribute__((weak))
+uint32_t hal_get_channel_freq(uint16_t chan) { return default_channel_freq; }
+
+__attribute__((weak))
+void hal_load_default_codeplug() { }
 
 __attribute__((weak))
 bool hal_ptt_is_down() { return false; }
@@ -66,7 +90,16 @@ __attribute__((weak))
 void hal_display_tx(bool on) {}
 
 __attribute__((weak))
+void hal_display_rx(bool on) {}
+
+__attribute__((weak))
 void hal_display_battery(uint8_t percent) {}
+
+__attribute__((weak))
+void hal_display_update() {}
+
+__attribute__((weak))
+void hal_display_backlight_set(bool on) { }
 
 __attribute__((weak))
 void hal_set_led_tx(bool led_on) {}
@@ -81,7 +114,7 @@ __attribute__((weak))
 void hal_uart_write(const uint8_t* data, size_t len) {}
 
 __attribute__((weak))
-bool hal_uart_connected() { return false; }
+bool hal_is_uart_connected() { return false; }
 
 
 void hal_init() {
@@ -94,6 +127,7 @@ void hal_init() {
 
 
 void hal_main_loop_iter() {
+     hal_set_channel(0); // we do this to ensure any frequency settings etc are loaded
      uint8_t ch = hal_get_channel();
      if (ch != last_channel) {
          last_channel = ch;

@@ -1,5 +1,5 @@
 /*
- * OpenCommRadio core callbacks
+ * OpenCommRadio core state
  *
  * This file is part of the OpenCommRadio project.
  *
@@ -18,20 +18,15 @@
  * GNU General Public License for more details.
  */
 
-#include "hal.h"
 #include <stddef.h>
 #include <stdbool.h>
 
-void opencomm_on_channel_change(uint16_t new_channel) {
-}
+#include "core_state.h"
 
-void opencomm_on_ptt_change(bool pressed) {
-}
+oc_fsm_state_t oc_current_state = OC_STATE_BOOT;
 
-void opencomm_on_exit_button() {
-}
-
-bool opencomm_hal_uart_conn() {
-}
-
+uint32_t oc_cur_freq      = 0;
+uint32_t oc_cur_chan_freq = 0;
+uint16_t oc_cur_chan_no   = 0;
+char*    oc_cur_chan_name = NULL;
 

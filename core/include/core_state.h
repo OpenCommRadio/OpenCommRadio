@@ -1,5 +1,5 @@
 /*
- * OpenCommRadio core callbacks
+ * OpenCommRadio core state
  *
  * This file is part of the OpenCommRadio project.
  *
@@ -18,20 +18,24 @@
  * GNU General Public License for more details.
  */
 
-#include "hal.h"
+#include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
 
-void opencomm_on_channel_change(uint16_t new_channel) {
-}
+typedef enum {
+	OC_STATE_BOOT,          // first state, just started up
+	OC_STATE_ANALOGUE_IDLE, // idling in analogue voice mode
+	OC_STATE_ANALOGUE_TX,   // transmitting in analogue voice mode
+	OC_STATE_DATA_IDLE,     // idling in data mode, ready to receive data
+	OC_STATE_DATA_CMD,      // data mode, AT hayes commands
+	OC_STATE_DATA_TX,       // data mode, transmitting data
+	OC_STATE_ERROR          // generic error state
+} oc_fsm_state_t;
 
-void opencomm_on_ptt_change(bool pressed) {
-}
+extern oc_fsm_state_t oc_current_state;
 
-void opencomm_on_exit_button() {
-}
-
-bool opencomm_hal_uart_conn() {
-}
-
+extern uint32_t oc_cur_freq;
+extern uint32_t oc_cur_chan_freq;
+extern uint16_t oc_cur_chan_no;
+extern char*    oc_cur_chan_name;
 
