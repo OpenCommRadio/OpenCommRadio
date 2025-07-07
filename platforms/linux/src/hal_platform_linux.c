@@ -65,10 +65,13 @@ void hal_display_status_text(char* text) {
 }
 
 void hal_display_update() {
-     fprintf(stderr,"+%-32s+\n",status_bar);
+     fprintf(stderr,"+--------------------------------+\n");
+     fprintf(stderr,"|%-32s|\n",status_bar);
+     fprintf(stderr,"+--------------------------------+\n");
      fprintf(stderr,"|%-32s|\n",display_lines[0]);
      fprintf(stderr,"|%-32s|\n",display_lines[1]);
      fprintf(stderr,"|%-32s|\n",display_lines[2]);
+     fprintf(stderr,"+--------------------------------+\n");
 
 }
 

@@ -20,6 +20,8 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include "hal.h"
 #include "core_state.h"
 
@@ -36,6 +38,16 @@
     EVENT_PTT_RELEASE,
     EVENT_ERROR
 } fsm_event_t;*/
+
+static char freq_str[16];
+
+#include <stdio.h>
+#include <stdint.h>
+
+void format_frequency(char *out, size_t out_size, uint32_t hz) {
+     snprintf(out, out_size, "%u.%06u MHz", hz / 1000000, hz % 1000000);
+
+}
 
 void opencomm_main_fsm() {
      switch(oc_current_state) {
@@ -70,7 +82,13 @@ void opencomm_main_fsm() {
 	break;
 
 	case OC_STATE_ANALOGUE_IDLE:
-
+		hal_display_clear();
+		hal_display_status_text("OPENCOMM A");
+		hal_display_line(1,"VOICE MODE");
+		hal_display_line(2,hal_get_channel_name(hal_get_channel()));
+		format_frequency(freq_str, sizeof(freq_str), hal_get_frequency());
+		hal_display_line(3,freq_str);
+		hal_display_update();
 	break;
 
 	case OC_STATE_ANALOGUE_TX:

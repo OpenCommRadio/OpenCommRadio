@@ -35,8 +35,9 @@ void hal_delay_ms(uint16_t ms); // delay a set number of milliseconds
 void hal_delay_us(uint16_t us); // delay a set number of microseconds
 
 // Radio control
-void hal_set_frequency(uint32_t hz);
-void hal_set_ctcss(uint16_t hz);
+void     hal_set_frequency(uint32_t hz);
+uint32_t hal_get_frequency();
+void     hal_set_ctcss(uint16_t hz);
 
 // Channel / codeplug stuff
 uint8_t  hal_get_channel();                   // get the current channel

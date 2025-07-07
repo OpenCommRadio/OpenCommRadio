@@ -69,6 +69,9 @@ __attribute__((weak))
 void hal_background_tick() {}
 
 __attribute__((weak))
+uint32_t hal_get_frequency() { return hal_get_channel_freq(hal_get_channel()); }
+
+__attribute__((weak))
 void hal_set_frequency(uint32_t hz) {}
 
 __attribute__((weak))
