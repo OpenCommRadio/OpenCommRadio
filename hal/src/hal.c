@@ -42,7 +42,7 @@ __attribute__((weak))
 void hal_delay_us(uint16_t us) { }
 
 __attribute__((weak))
-uint8_t hal_get_channel() { return 0; }
+uint16_t hal_get_channel() { return 0; }
 
 __attribute__((weak))
 uint16_t hal_get_channel_count() { return 1; }

@@ -45,10 +45,32 @@ void* opencomm_main_loop(void* arg) {
 void cli_help_cmd() {
      fprintf(stderr,"\nCommands available:\n\n");
 
-     HELP_CMD("exit","","Exit the simulation")
-     HELP_CMD("ptt", "[on|off]","Simulate pressing or releasing the PTT button")
+     HELP_CMD("exit",    "",           "Exit the simulation")
+     HELP_CMD("ptt",     "[on|off]",   "Simulate pressing or releasing the PTT button")
+     HELP_CMD("channel", "[left|down]","Channel change, equivalent of turning the channel knob left or pressing the down arrow")
+     HELP_CMD("channel", "[right|up]", "Channel change, equivalent of turning the channel knob right or pressing the up arrow")
 
      fprintf(stderr,"\n\n");
+}
+
+void cli_channel_left_cmd() {
+     uint16_t cur_chan     = hal_get_channel();
+     uint16_t chan_highest = hal_get_channel_count()-1;
+     if(cur_chan==0) { 
+        hal_set_channel(chan_highest); // if we're already on channel 0, rotate round to the highest channel
+     } else {
+        hal_set_channel(cur_chan-1);  // otherwise, we just go down one
+     }
+}
+
+void cli_channel_right_cmd() {
+     uint16_t cur_chan     = hal_get_channel();
+     uint16_t chan_highest = hal_get_channel_count()-1;
+     if(cur_chan == chan_highest) {
+        hal_set_channel(0); // if we're already on the highest channel, rotate back to channel 0
+     } else {
+        hal_set_channel(cur_chan+1);
+     }
 }
 
 void cli_handle_cmd(const char* cmd) {
@@ -60,6 +82,10 @@ void cli_handle_cmd(const char* cmd) {
         opencomm_on_ptt_change(true);
      } else if(strcmp(cmd,"ptt off")==0) {
         opencomm_on_ptt_change(false);
+     } else if((strcmp(cmd,"channel left")==0)   || (strcmp(cmd,"channel down")==0)) {
+        cli_channel_left_cmd();
+     } else if((strcmp(cmd,"channel right")==0)  || (strcmp(cmd,"channel up")==0))  {
+        cli_channel_right_cmd();
      }
 }
 
