@@ -40,10 +40,22 @@ void* opencomm_main_loop(void* arg) {
       }
 }
 
+#define HELP_CMD(cmd_name,cmd_args,cmd_usage) fprintf(stderr,"\t " cmd_name " " cmd_args "\n\t\t " cmd_usage "\n");
+
+void cli_help_cmd() {
+     fprintf(stderr,"\nCommands available:\n\n");
+
+     HELP_CMD("exit","","Exit the simulation")
+     HELP_CMD("ptt", "[on|off]","Simulate pressing or releasing the PTT button")
+
+     fprintf(stderr,"\n\n");
+}
+
 void cli_handle_cmd(const char* cmd) {
      if(strcmp(cmd,"exit")==0) {
         running = false;
-	return;
+     } else if(strcmp(cmd,"help")==0) {
+        cli_help_cmd();
      } else if(strcmp(cmd,"ptt on")==0) {
         opencomm_on_ptt_change(true);
      } else if(strcmp(cmd,"ptt off")==0) {
@@ -61,12 +73,13 @@ void* opencomm_cli_loop(void* arg) {
       }
 }
 
-
 int main(int argc, char** argv) {
     fprintf(stderr,"OpenComm core v%s\n", OPENCOMM_CORE_VER);
     fprintf(stderr,"OpenComm HAL v%s\n",  OPENCOMM_HAL_VER);
     fprintf(stderr,"OpenComm linux platform v%s\n", OPENCOMM_PLATFORM_LINUX_VER);
 
+    fprintf(stderr,"\n\nPress enter to summon the prompt if it isn't shown\n");
+    fprintf(stderr,"Type exit to close the simulation\n\n\n");
     int ret = 0;
     ret = pthread_create(&opencomm_thread,NULL,&opencomm_main_loop,NULL);
     ret = pthread_create(&cli_thread,     NULL,&opencomm_cli_loop, NULL);
