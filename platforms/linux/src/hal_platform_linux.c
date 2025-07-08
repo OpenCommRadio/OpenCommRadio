@@ -23,6 +23,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <readline/readline.h>
 #include "hal.h"
 
 void hal_platform_init() {
@@ -69,6 +70,9 @@ void hal_display_status_text(char* text) {
 }
 
 void hal_display_update() {
+     rl_save_prompt();
+     rl_replace_line("",0);
+     rl_redisplay();
      fprintf(stderr,"+--------------------------------+\n");
      fprintf(stderr,"|%-32s|\n",status_bar);
      fprintf(stderr,"+--------------------------------+\n");
@@ -76,7 +80,8 @@ void hal_display_update() {
      fprintf(stderr,"|%-32s|\n",display_lines[1]);
      fprintf(stderr,"|%-32s|\n",display_lines[2]);
      fprintf(stderr,"+--------------------------------+\n");
-
+     rl_restore_prompt();
+     rl_redisplay();
 }
 
 void hal_display_backlight_set(bool on) {

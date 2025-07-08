@@ -120,6 +120,7 @@ void opencomm_main_fsm() {
 		// update the UI appropriately
 		hal_display_status_text("OPENCOMM A-TX");
 		hal_display_update();
+		oc_current_state = OC_STATE_ANALOGUE_TX;
 	break;
 
 	case OC_STATE_ANALOGUE_TX:
@@ -128,6 +129,7 @@ void opencomm_main_fsm() {
 	case OC_STATE_ANALOGUE_TX_LEAVE:
 		hal_set_led_tx(false);
 		hal_set_radio_tx_voice(false);
+		oc_current_state = OC_STATE_ANALOGUE_ENTER; // go back to idle by entering
 	break;
 
 	case OC_STATE_DATA_IDLE:

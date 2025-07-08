@@ -32,9 +32,7 @@ void opencomm_on_ptt_change(bool pressed) {
 
      if(oc_current_state==OC_STATE_ANALOGUE_IDLE && pressed) { // if we're idling in voice mode and PTT is down, we begin TX
         oc_current_state = OC_STATE_ANALOGUE_TX_ENTER; // TODO - we need to change this to support RX-only channels
-     }
-
-     if(oc_current_state==OC_STATE_ANALOGUE_TX && !pressed) { // if we're currently transmitting and PTT is released, we stop TX
+     } else if(oc_current_state==OC_STATE_ANALOGUE_TX && !pressed) { // if we're currently transmitting and PTT is released, we stop TX
         oc_current_state = OC_STATE_ANALOGUE_TX_LEAVE;
      }
 
