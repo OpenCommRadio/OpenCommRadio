@@ -25,9 +25,10 @@ $(OBJ_DIR)/%.o: %.c
 
 CPPFLAGS += $(INCLUDES)
 
+# TODO - this should really be in platforms/linux/rules.mk - with some method for handling building the executables for other platforms eventually
 $(BUILD_DIR)/opencommradio: $(OBJS) $(LIB_TARGETS)
 	@mkdir -p $(dir $@)
-	$(CC) -lpthread $(LIB_TARGETS) $(OBJS)  -o $@
+	$(CC) -lpthread -lreadline $(LIB_TARGETS) $(OBJS)  -o $@
 
 $(OBJ_DIR)/%.o: %.c
 	mkdir -p $(dir $@)

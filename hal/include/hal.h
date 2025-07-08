@@ -38,6 +38,7 @@ void hal_delay_us(uint16_t us); // delay a set number of microseconds
 void     hal_set_frequency(uint32_t hz);
 uint32_t hal_get_frequency();
 void     hal_set_ctcss(uint16_t hz);
+void     hal_set_radio_tx_voice(bool tx); // tell the radio to transmit voice on the current channel, or stop it
 
 // Channel / codeplug stuff
 uint8_t  hal_get_channel();                   // get the current channel
@@ -62,6 +63,7 @@ void hal_display_backlight_set(bool on);
 
 // LEDs
 void hal_set_led_tx(bool led_on);
+void hal_set_led_rx(bool led_on);
 
 // UART interface
 bool    hal_uart_data_available();

@@ -23,13 +23,16 @@
 #include <stdbool.h>
 
 typedef enum {
-	OC_STATE_BOOT,          // first state, just started up
-	OC_STATE_ANALOGUE_IDLE, // idling in analogue voice mode
-	OC_STATE_ANALOGUE_TX,   // transmitting in analogue voice mode
-	OC_STATE_DATA_IDLE,     // idling in data mode, ready to receive data
-	OC_STATE_DATA_CMD,      // data mode, AT hayes commands
-	OC_STATE_DATA_TX,       // data mode, transmitting data
-	OC_STATE_ERROR          // generic error state
+	OC_STATE_BOOT,               // first state, just started up
+	OC_STATE_ANALOGUE_ENTER,     // init of the analogue voice mode
+	OC_STATE_ANALOGUE_IDLE,      // idling in analogue voice mode
+	OC_STATE_ANALOGUE_TX_ENTER,  // start transmission
+	OC_STATE_ANALOGUE_TX,        // transmitting in analogue voice mode
+	OC_STATE_ANALOGUE_TX_LEAVE,  // end transmission
+	OC_STATE_DATA_IDLE,          // idling in data mode, ready to receive data
+	OC_STATE_DATA_CMD,           // data mode, AT hayes commands
+	OC_STATE_DATA_TX,            // data mode, transmitting data
+	OC_STATE_ERROR               // generic error state
 } oc_fsm_state_t;
 
 extern oc_fsm_state_t oc_current_state;

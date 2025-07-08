@@ -83,26 +83,51 @@ void opencomm_main_fsm() {
 		oc_last_freq = oc_cur_freq;
 		oc_last_chan = oc_cur_chan_no;
 
-		// and now we setup the correct frequency for that channel
-		hal_set_frequency(oc_cur_chan_freq);
-
-		// and finally, another wait, just to be sure, and then we switch into the relevant mode
+		// delay before we switch
 		hal_delay_ms(1000);
+
 		if(hal_is_uart_connected()) {
 			oc_current_state = OC_STATE_DATA_IDLE;
 		} else {
-			oc_current_state = OC_STATE_ANALOGUE_IDLE;
+			oc_current_state = OC_STATE_ANALOGUE_ENTER;
 		}
 
+	break;
+
+	case OC_STATE_ANALOGUE_ENTER:
+		// set the frequency etc correctly
+		hal_set_frequency(oc_cur_chan_freq);
+		
 		// render it here, because otherwise it won't be rendered
 		render_state_analogue_idle();
+
+		// now we delay a little bit again and idle
+		hal_delay_ms(250);
+		oc_current_state = OC_STATE_ANALOGUE_IDLE;
 	break;
 
 	case OC_STATE_ANALOGUE_IDLE:
+		// if we changed frequency or channel, re-render the display
 		if((oc_last_freq != oc_cur_freq)||(oc_last_chan != oc_cur_chan_no)) render_state_analogue_idle();
 	break;
 
+	case OC_STATE_ANALOGUE_TX_ENTER:
+		hal_set_led_rx(false); // otherwise it's just wrong and confusing
+		hal_set_led_tx(true);
+		hal_set_radio_tx_voice(true); // TODO - handle RX-only stuff here, maybe show an error message
+		
+		// TODO - handle split TX/RX for repeaters rather than plain simplex
+		// update the UI appropriately
+		hal_display_status_text("OPENCOMM A-TX");
+		hal_display_update();
+	break;
+
 	case OC_STATE_ANALOGUE_TX:
+	break;
+
+	case OC_STATE_ANALOGUE_TX_LEAVE:
+		hal_set_led_tx(false);
+		hal_set_radio_tx_voice(false);
 	break;
 
 	case OC_STATE_DATA_IDLE:

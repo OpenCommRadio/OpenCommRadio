@@ -19,6 +19,8 @@
  */
 
 #include "hal.h"
+#include "core_state.h"
+
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -26,6 +28,19 @@ void opencomm_on_channel_change(uint16_t new_channel) {
 }
 
 void opencomm_on_ptt_change(bool pressed) {
+     // here we just check if we're in analogue voice mode, otherwise we do nothing, we don't care
+
+     if(oc_current_state==OC_STATE_ANALOGUE_IDLE && pressed) { // if we're idling in voice mode and PTT is down, we begin TX
+        oc_current_state = OC_STATE_ANALOGUE_TX_ENTER; // TODO - we need to change this to support RX-only channels
+     }
+
+     if(oc_current_state==OC_STATE_ANALOGUE_TX && !pressed) { // if we're currently transmitting and PTT is released, we stop TX
+        oc_current_state = OC_STATE_ANALOGUE_TX_LEAVE;
+     }
+
+     // otherwise we don't give a fuck about that fucking PTT, what a fucking PTT button, fucking being pressed down or not
+     // why the fuck should i care about you, you dumb fucking button
+
 }
 
 void opencomm_on_exit_button() {

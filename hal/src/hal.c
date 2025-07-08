@@ -78,6 +78,9 @@ __attribute__((weak))
 void hal_set_ctcss(uint16_t hz) {}
 
 __attribute__((weak))
+void hal_set_radio_tx_voice(bool tx) { }
+
+__attribute__((weak))
 uint8_t hal_get_battery_level() { return 255; }
 
 __attribute__((weak))
@@ -106,6 +109,9 @@ void hal_display_backlight_set(bool on) { }
 
 __attribute__((weak))
 void hal_set_led_tx(bool led_on) {}
+
+__attribute__((weak))
+void hal_set_led_rx(bool led_on) {}
 
 __attribute__((weak))
 bool hal_uart_data_available() { return false; }
