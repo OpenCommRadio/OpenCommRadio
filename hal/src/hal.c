@@ -35,14 +35,14 @@ static const oc_codeplug_t oc_default_codeplug = {
     .callsign = "NOCALL-1",
     .channel_count = 8,
     .channels = {
-        { .freq_rx=0, .freq_tx = 145500000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF CALL"  },
-        { .freq_rx=0, .freq_tx = 145550000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF CHAT"  },
-        { .freq_rx=0, .freq_tx = 145600000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF DATA1" },
-        { .freq_rx=0, .freq_tx = 145625000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF DATA2" },
-        { .freq_rx=0, .freq_tx = 433500000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF CALL"  },
-        { .freq_rx=0, .freq_tx = 433450000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF CHAT"  },
-        { .freq_rx=0, .freq_tx = 433600000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF DATA1" },
-        { .freq_rx=0, .freq_tx = 433620000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF DATA2" }
+        { .freq_rx=0, .freq_tx = 145500000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF CALL",  .mode=OC_MODE_ANALOGUE_FM },
+        { .freq_rx=0, .freq_tx = 145550000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF CHAT",  .mode=OC_MODE_ANALOGUE_FM },
+        { .freq_rx=0, .freq_tx = 145600000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF DATA1", .mode=OC_MODE_DATA_FFSK },
+        { .freq_rx=0, .freq_tx = 145625000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF DATA2", .mode=OC_MODE_DATA_FFSK },
+        { .freq_rx=0, .freq_tx = 433500000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF CALL",  .mode=OC_MODE_ANALOGUE_FM },
+        { .freq_rx=0, .freq_tx = 433450000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF CHAT",  .mode=OC_MODE_ANALOGUE_FM },
+        { .freq_rx=0, .freq_tx = 433600000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF DATA1", .mode=OC_MODE_DATA_FFSK },
+        { .freq_rx=0, .freq_tx = 433620000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF DATA2", .mode=OC_MODE_DATA_FFSK }
     },
 };
 
@@ -66,13 +66,20 @@ __attribute__((weak))
 uint16_t hal_get_channel_count() { return oc_cur_codeplug.channel_count; }
 
 __attribute__((weak))
-void hal_set_channel(uint16_t chan) { last_channel=cur_channel; cur_channel = chan; }
+void hal_set_channel(uint16_t chan) { 
+     last_channel=cur_channel;
+     cur_channel = chan;
+     hal_set_frequency(hal_get_channel_freq(chan));
+}
 
 __attribute__((weak))
 char* hal_get_channel_name(uint16_t chan) { return (char*)oc_cur_codeplug.channels[chan].chan_name; }
 
 __attribute__((weak))
 uint32_t hal_get_channel_freq(uint16_t chan) { return oc_cur_codeplug.channels[chan].freq_tx; }
+
+__attribute__((weak))
+oc_chan_mode_t hal_get_channel_mode(uint16_t chan) { return oc_cur_codeplug.channels[chan].mode; }
 
 __attribute__((weak))
 void hal_load_default_codeplug() { 
@@ -146,6 +153,20 @@ __attribute__((weak))
 bool hal_is_uart_connected() { return false; }
 
 
+__attribute__((weak))
+void hal_modem_init(opencomm_modem_rx_callback cb) { }
+
+__attribute__((weak))
+void hal_modem_send(uint8_t byte);
+
+
+__attribute__((weak))
+void hal_modem_send_bytes(uint8_t* data, size_t len) { }
+
+
+__attribute__((weak))
+void hal_modem_tick() { }
+
 void hal_init() {
      hal_platform_init();
      last_channel = hal_get_channel();
@@ -153,8 +174,6 @@ void hal_init() {
      last_exit    = hal_exit_button_pressed();
      hal_set_channel(0);
 }
-
-
 
 void hal_main_loop_iter() {
      uint16_t ch = hal_get_channel();

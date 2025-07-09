@@ -59,6 +59,16 @@ static void render_state_analogue_idle() {
 	hal_display_update();
 }
 
+static void render_state_data_idle() {
+	hal_display_clear();
+	hal_display_status_text("OPENCOMM D");
+	hal_display_line(1,"DATA MODE");
+	hal_display_line(2,hal_get_channel_name(hal_get_channel()));
+	format_frequency(freq_str, sizeof(freq_str), hal_get_frequency());
+	hal_display_line(3,freq_str);
+	hal_display_update();
+}
+
 void opencomm_main_fsm() {
      switch(oc_current_state) {
         case OC_STATE_BOOT:
@@ -107,9 +117,16 @@ void opencomm_main_fsm() {
 	break;
 
 	case OC_STATE_ANALOGUE_IDLE:
+		// first, check what mode we're in and switch if appropriate
+		if(hal_get_channel_mode(oc_cur_chan_no)==OC_MODE_DATA_FFSK) {
+			oc_current_state = OC_STATE_DATA_ENTER;
+			return;
+		}
+
 		// if we changed frequency or channel, re-render the display
-		if(oc_last_chan != oc_cur_chan_no) {
-			oc_cur_chan_no = oc_last_chan;
+		if( (oc_last_chan != oc_cur_chan_no) || (oc_last_freq != oc_cur_freq)) {
+			if(oc_last_chan != oc_cur_chan_no) oc_last_chan = oc_cur_chan_no;
+			if(oc_last_freq != oc_cur_freq)    oc_last_freq = oc_cur_freq;
 			render_state_analogue_idle();
 		}
 	break;
@@ -135,13 +152,24 @@ void opencomm_main_fsm() {
 		oc_current_state = OC_STATE_ANALOGUE_ENTER; // go back to idle by entering
 	break;
 
+	case OC_STATE_DATA_ENTER:
+		render_state_data_idle();              // do it here before we switch states
+		hal_modem_init(&opencomm_modem_on_rx); // setup the modem ready
+		oc_current_state = OC_STATE_DATA_CMD;  // switch to data mode in command mode
+	break;
+
+	// TODO - we need to switch channels as appropriate when in data mode
+
 	case OC_STATE_DATA_IDLE:
+		hal_modem_tick();
 	break;
 
 	case OC_STATE_DATA_CMD:
+		hal_modem_tick();
 	break;
 
 	case OC_STATE_DATA_TX:
+		hal_modem_tick();
 	break;
 
 	case OC_STATE_ERROR:

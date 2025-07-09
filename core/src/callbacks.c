@@ -31,6 +31,7 @@ void opencomm_on_channel_change(uint16_t new_channel) {
      oc_cur_chan_no   = new_channel;
      oc_cur_freq      = hal_get_channel_freq(new_channel);
      oc_cur_chan_name = hal_get_channel_name(new_channel);
+
 }
 
 void opencomm_on_ptt_change(bool pressed) {
@@ -53,4 +54,8 @@ void opencomm_on_exit_button() {
 bool opencomm_hal_uart_conn() {
 }
 
-
+void opencomm_modem_on_rx(uint8_t byte) {
+     if(hal_is_uart_connected() && (oc_current_state==OC_STATE_DATA_IDLE)) {
+        hal_uart_write(&byte, 1);
+     }
+}

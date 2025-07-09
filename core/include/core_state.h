@@ -29,6 +29,7 @@ typedef enum {
 	OC_STATE_ANALOGUE_TX_ENTER,  // start transmission
 	OC_STATE_ANALOGUE_TX,        // transmitting in analogue voice mode
 	OC_STATE_ANALOGUE_TX_LEAVE,  // end transmission
+	OC_STATE_DATA_ENTER,         // entering data mode
 	OC_STATE_DATA_IDLE,          // idling in data mode, ready to receive data
 	OC_STATE_DATA_CMD,           // data mode, AT hayes commands
 	OC_STATE_DATA_TX,            // data mode, transmitting data

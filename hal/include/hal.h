@@ -50,6 +50,11 @@ typedef enum {
 	OC_POWER_HIGH,
 } oc_tx_power_t;
 
+typedef enum {
+	OC_MODE_ANALOGUE_FM,
+	OC_MODE_DATA_FFSK,
+} oc_chan_mode_t;
+
 typedef struct {
 	oc_tx_power_t tx_power;
 	uint32_t freq_tx;
@@ -57,6 +62,7 @@ typedef struct {
 	uint16_t ctcss_tx;
 	uint16_t ctcss_rx;
 	char chan_name[12];
+	oc_chan_mode_t mode;
 } oc_codeplug_channel_t;
 
 typedef struct {
@@ -65,12 +71,13 @@ typedef struct {
 	oc_codeplug_channel_t channels[CODEPLUG_MAX_CHANNELS];
 } oc_codeplug_t;
 
-uint16_t  hal_get_channel();                  // get the current channel
-uint16_t hal_get_channel_count();             // get the number of channels
-void     hal_set_channel(uint16_t chan);      // set the current channel, this should also set the correct frequency
-char*    hal_get_channel_name(uint16_t chan); // get the name of the current channel
-uint32_t hal_get_channel_freq(uint16_t chan); // get the frequency of the specified channel
-void     hal_load_default_codeplug();         // load the default codeplug
+uint16_t       hal_get_channel();                   // get the current channel
+uint16_t       hal_get_channel_count();             // get the number of channels
+void           hal_set_channel(uint16_t chan);      // set the current channel, this should also set the correct frequency
+char*          hal_get_channel_name(uint16_t chan); // get the name of the current channel
+uint32_t       hal_get_channel_freq(uint16_t chan); // get the frequency of the specified channel
+oc_chan_mode_t hal_get_channel_mode(uint16_t chan); // get the mode of the specified channel
+void           hal_load_default_codeplug();         // load the default codeplug
 
 // Power info
 uint8_t hal_get_battery_level();   // 0–100% represented as 0x00 - 0xFF
@@ -119,6 +126,7 @@ void opencomm_on_channel_change(uint16_t new_channel);
 void opencomm_on_ptt_change(bool pressed);
 void opencomm_on_exit_button();
 bool opencomm_hal_uart_conn();
+void opencomm_modem_on_rx(uint8_t byte);
 
 // externs from the core
 extern void opencomm_main_fsm();
