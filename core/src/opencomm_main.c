@@ -108,7 +108,10 @@ void opencomm_main_fsm() {
 
 	case OC_STATE_ANALOGUE_IDLE:
 		// if we changed frequency or channel, re-render the display
-		if((oc_last_freq != oc_cur_freq)||(oc_last_chan != oc_cur_chan_no)) render_state_analogue_idle();
+		if(oc_last_chan != oc_cur_chan_no) {
+			oc_cur_chan_no = oc_last_chan;
+			render_state_analogue_idle();
+		}
 	break;
 
 	case OC_STATE_ANALOGUE_TX_ENTER:

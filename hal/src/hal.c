@@ -23,12 +23,30 @@
 
 // --- Internal state ---
 
-static uint8_t last_channel = 0xFF;
-static bool    last_ptt     = false;
-static bool    last_exit    = false;
+static uint16_t last_channel = 0;
+static uint16_t cur_channel  = 0;
+static bool     last_ptt     = false;
+static bool     last_exit    = false;
 
 static const char     default_channel_name[] = "PMR1";
 static const uint32_t default_channel_freq   = 446006250;
+
+static const oc_codeplug_t oc_default_codeplug = {
+    .callsign = "NOCALL-1",
+    .channel_count = 8,
+    .channels = {
+        { .freq_rx=0, .freq_tx = 145500000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF CALL"  },
+        { .freq_rx=0, .freq_tx = 145550000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF CHAT"  },
+        { .freq_rx=0, .freq_tx = 145600000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF DATA1" },
+        { .freq_rx=0, .freq_tx = 145625000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "VHF DATA2" },
+        { .freq_rx=0, .freq_tx = 433500000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF CALL"  },
+        { .freq_rx=0, .freq_tx = 433450000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF CHAT"  },
+        { .freq_rx=0, .freq_tx = 433600000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF DATA1" },
+        { .freq_rx=0, .freq_tx = 433620000, .tx_power = OC_POWER_LOW, .ctcss_tx = 0, .ctcss_rx = 0, .chan_name = "UHF DATA2" }
+    },
+};
+
+static oc_codeplug_t oc_cur_codeplug;
 
 // --- Weak platform overrides ---
 
@@ -42,22 +60,24 @@ __attribute__((weak))
 void hal_delay_us(uint16_t us) { }
 
 __attribute__((weak))
-uint16_t hal_get_channel() { return 0; }
+uint16_t hal_get_channel() { return cur_channel; }
 
 __attribute__((weak))
-uint16_t hal_get_channel_count() { return 1; }
+uint16_t hal_get_channel_count() { return oc_cur_codeplug.channel_count; }
 
 __attribute__((weak))
-void hal_set_channel(uint16_t chan) { }
+void hal_set_channel(uint16_t chan) { last_channel=cur_channel; cur_channel = chan; }
 
 __attribute__((weak))
-char* hal_get_channel_name(uint16_t chan) { return (char*)default_channel_name; }
+char* hal_get_channel_name(uint16_t chan) { return (char*)oc_cur_codeplug.channels[chan].chan_name; }
 
 __attribute__((weak))
-uint32_t hal_get_channel_freq(uint16_t chan) { return default_channel_freq; }
+uint32_t hal_get_channel_freq(uint16_t chan) { return oc_cur_codeplug.channels[chan].freq_tx; }
 
 __attribute__((weak))
-void hal_load_default_codeplug() { }
+void hal_load_default_codeplug() { 
+     oc_cur_codeplug = oc_default_codeplug;
+}
 
 __attribute__((weak))
 bool hal_ptt_is_down() { return false; }
@@ -131,13 +151,13 @@ void hal_init() {
      last_channel = hal_get_channel();
      last_ptt     = hal_ptt_is_down();
      last_exit    = hal_exit_button_pressed();
+     hal_set_channel(0);
 }
 
 
 
 void hal_main_loop_iter() {
-     hal_set_channel(0); // we do this to ensure any frequency settings etc are loaded
-     uint8_t ch = hal_get_channel();
+     uint16_t ch = hal_get_channel();
      if (ch != last_channel) {
          last_channel = ch;
          opencomm_on_channel_change(ch);

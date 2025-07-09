@@ -25,6 +25,12 @@
 #include <stdbool.h>
 
 void opencomm_on_channel_change(uint16_t new_channel) {
+     oc_last_chan = oc_cur_chan_no;
+     oc_last_freq = oc_cur_chan_freq;
+     
+     oc_cur_chan_no   = new_channel;
+     oc_cur_freq      = hal_get_channel_freq(new_channel);
+     oc_cur_chan_name = hal_get_channel_name(new_channel);
 }
 
 void opencomm_on_ptt_change(bool pressed) {

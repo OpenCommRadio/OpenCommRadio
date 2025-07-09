@@ -41,7 +41,31 @@ void     hal_set_ctcss(uint16_t hz);
 void     hal_set_radio_tx_voice(bool tx); // tell the radio to transmit voice on the current channel, or stop it
 
 // Channel / codeplug stuff
-uint16_t  hal_get_channel();                   // get the current channel
+
+#define CALLSIGN_MAX_LEN 12
+#define CODEPLUG_MAX_CHANNELS 16
+
+typedef enum {
+	OC_POWER_LOW,
+	OC_POWER_HIGH,
+} oc_tx_power_t;
+
+typedef struct {
+	oc_tx_power_t tx_power;
+	uint32_t freq_tx;
+	uint32_t freq_rx;
+	uint16_t ctcss_tx;
+	uint16_t ctcss_rx;
+	char chan_name[12];
+} oc_codeplug_channel_t;
+
+typedef struct {
+	char callsign[CALLSIGN_MAX_LEN];
+	uint16_t channel_count;
+	oc_codeplug_channel_t channels[CODEPLUG_MAX_CHANNELS];
+} oc_codeplug_t;
+
+uint16_t  hal_get_channel();                  // get the current channel
 uint16_t hal_get_channel_count();             // get the number of channels
 void     hal_set_channel(uint16_t chan);      // set the current channel, this should also set the correct frequency
 char*    hal_get_channel_name(uint16_t chan); // get the name of the current channel
